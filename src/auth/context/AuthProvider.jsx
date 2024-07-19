@@ -1,15 +1,45 @@
-import React, { useReducer } from 'react'
+import React, { act, useReducer } from 'react'
 import { authReducer } from './authReducer'
-const initiaState = {
-    logged:false,
-}
+import { AuthContext } from './AuthContext';
+import { types } from '../types/types';
 
-export const AuthProvider = ({children}) => {
-    const[state, dispatch] =useReducer(authReducer, initiaState);
-  return (
+// const initiaState = {
+//     logged: false,
+// }
+const init = ()=>{
+    const user=JSON.parse(localStorage.getItem('user'));
+    return{
+        logged: !!user, //doble negacion para comprobar si el usuario existe
+        user: user,
+    }
+}
+export const AuthProvider = ({ children }) => {
+
+    const [authState, dispatch] = useReducer(authReducer, {}, init); //init; initializer
     
-    <AuthProvider.provider value={{}}>
-        {children}
-    </AuthProvider.provider>
-  )
+    const login = (name = '') => {
+
+        const user={id: 'ABC', name}
+        const action = {
+            type: types.login,
+            payload: user
+        }
+        localStorage.setItem('user', JSON.stringify(user))
+        dispatch(action);
+    }
+    const logout= () =>{
+        localStorage.removeItem('user')
+        const action={type: types.logout};
+        dispatch(action);
+    }
+    return (
+
+        <AuthContext.Provider value={{
+            ...authState,
+            login,
+            logout
+        }}>
+            {children}
+        </AuthContext.Provider>
+    )
 }

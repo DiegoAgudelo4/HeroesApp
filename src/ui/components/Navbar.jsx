@@ -1,14 +1,18 @@
+import { useContext } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../auth/context/AuthContext';
 
 
 export const Navbar = () => {
-   
+    const {user,logout}=useContext(AuthContext);
 
     //se debe acceder al navigation provider para traer 
     //el push y el replace
     //custom hook que nos ayuda con la navegacion 
     const navigate= useNavigate();
+
     const handleLogout = () =>{
+        logout();
         navigate('/login',
             {
                 replace: true
@@ -57,7 +61,7 @@ export const Navbar = () => {
                     <span 
                         className='nav-item nav-link text-primary'
                     >
-                        Usuario.nombre
+                        {user?.name}
                     </span>
 
                     <button

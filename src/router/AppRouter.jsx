@@ -8,6 +8,8 @@ import { Route, Routes } from 'react-router-dom';
 import { LoginPage } from "../auth";
 import { HeroesRoutes } from '../Heroes';
 import { Navbar } from '../ui';
+import { PrivateRoute } from './PrivateRoute';
+import { PublicRoute } from './PublicRoute';
 
 export const AppRouter = () => {
   return (
@@ -15,8 +17,26 @@ export const AppRouter = () => {
 
       {
         <Routes>
-          <Route path="login" element={<LoginPage />} />
-          <Route path="/*" element={<HeroesRoutes />} />
+          {/* Rutas publicas */}
+
+          {/* <Route path="login" element={<LoginPage />} /> */}
+          {/*-> <Route path="login/*" element={ */}
+          <Route path="login" element={
+            <PublicRoute>
+              <LoginPage/>
+              {/*->  <Route path="/*" element={<LoginPage />} /> */}
+            </PublicRoute>
+            } 
+            />
+
+          {/* Rutas privadas */}
+          <Route path='/*' element={
+            <PrivateRoute>
+              <HeroesRoutes/>
+            </PrivateRoute>
+          }/>
+
+          {/* <Route path="/*" element={<HeroesRoutes />} /> */}
         </Routes>
       }
     </>
